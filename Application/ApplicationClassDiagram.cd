@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Application.ApplicationContext">
+    <Position X="6" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAEAAAAAkAAAAAAAAAACA=</HashCode>
+      <FileName>ApplicationContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Application.Services.Services.PartnerService">
+    <Position X="0.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAEIAAAAAACAAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>Services\Services\PartnerService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Application.Services.Services.ProductionService">
+    <Position X="2.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAABEAAAAAIAAAAAAAAAEAAAAAQAAAAAAA=</HashCode>
+      <FileName>Services\Services\ProductionService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Application.Services.Services.ProductSaleService">
+    <Position X="4.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAIAAAAAJAAAAAAAAAAAAAAAAAAAAQAAAAAAAgA=</HashCode>
+      <FileName>Services\Services\ProductSaleService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="Application.Services.Interfaces.IPartnerService">
+    <Position X="0.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAEIAAAAAACAAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>Services\Interfaces\IPartnerService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Application.Services.Interfaces.IProductionService">
+    <Position X="2.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAAEAAAAAIAAAAAAAAAEAAAAAQAAAAAAA=</HashCode>
+      <FileName>Services\Interfaces\IProductionService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Application.Services.Interfaces.IProductSaleService">
+    <Position X="4.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAIAAAAAIAAAAAAAAAAAAAAAAAAAAQAAAAAAAgA=</HashCode>
+      <FileName>Services\Interfaces\IProductSaleService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
