@@ -52,9 +52,9 @@ namespace MasterFloor.DataForms
 
         private bool ValidateInputs()
         {
-            if (!double.TryParse(Production_Min_Partner_Price_TB.Text, out _))
+            if (!IsArticleValid(Production_Article_TB.Text))
             {
-                MessageBox.Show("Неверное значение мин. цены!");
+                MessageBox.Show("Неверный артикль!");
                 return false;
             }
             if (!int.TryParse(Production_Length_TB.Text, out _))
@@ -82,13 +82,16 @@ namespace MasterFloor.DataForms
                 MessageBox.Show("Неверное значение массы брутто!");
                 return false;
             }
-
+            if (!double.TryParse(Production_Min_Partner_Price_TB.Text, out _))
+            {
+                MessageBox.Show("Неверное значение мин. цены!");
+                return false;
+            }
             if (!double.TryParse(Production_Cost_Price_TB.Text, out _))
             {
                 MessageBox.Show("Неверное значение цены!");
                 return false;
             }
-
             return true;
         }
         public Production? GetProduction()
@@ -118,6 +121,29 @@ namespace MasterFloor.DataForms
                 return p;
             }
             return null;
+        }
+
+        public static bool IsArticleValid(string article)
+        {
+            string trimmed = article.Replace(" ", "");
+
+            if (trimmed.Length < 6)
+            {
+                MessageBox.Show("Артикул должен быть не короче 6 символов.");
+                return false;
+            }
+            if (trimmed.StartsWith("0"))
+            {
+                MessageBox.Show("Артикул не должен начинаться с цифры '0'.");
+                return false;
+            }
+            if (!Regex.IsMatch(trimmed, @"^[A-Z0-9\-]+$"))
+            {
+                MessageBox.Show("Артикул содержит недопустимые символы. Используйте только заглавные буквы, цифры и дефисы.");
+                return false;
+            }
+
+            return true;
         }
 
         private void accept_btn_Click(object sender, RoutedEventArgs e)

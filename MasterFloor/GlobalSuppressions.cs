@@ -5,4 +5,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Style", "IDE0059:Ненужное присваивание значения", Justification = "<Ожидание>", Scope = "member", Target = "~M:MasterFloor.DataForms.ProductionRedactWindow.ValidateInputs(System.Decimal@,System.Int32@,System.Int32@,System.Int32@,System.Decimal@,System.Decimal@,System.Decimal@)~System.Boolean")]
+[assembly: SuppressMessage("Style", "IDE0300:Упростите инициализацию коллекции", Justification = "<Ожидание>", Scope = "member", Target = "~M:MasterFloor.DataForms.PartnerRedactWindow.CheckINN12(System.String)~System.Boolean")]
+[assembly: SuppressMessage("Style", "IDE0300:Упростите инициализацию коллекции", Justification = "<Ожидание>", Scope = "member", Target = "~M:MasterFloor.DataForms.PartnerRedactWindow.CheckINN10(System.String)~System.Boolean")]
+[assembly: SuppressMessage("Performance", "SYSLIB1045:Преобразовать в \"GeneratedRegexAttribute\".", Justification = "<Ожидание>", Scope = "member", Target = "~M:MasterFloor.DataForms.ProductionRedactWindow.IsArticleValid(System.String)~System.Boolean")]
+[assembly: SuppressMessage("Performance", "CA1866:Использовать перегрузку символов", Justification = "<Ожидание>", Scope = "member", Target = "~M:MasterFloor.DataForms.ProductionRedactWindow.IsArticleValid(System.String)~System.Boolean")]
