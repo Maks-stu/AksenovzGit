@@ -1,0 +1,44 @@
+﻿<Window x:Class="MasterFloor.DataForms.ProductionListWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MasterFloor.DataForms"
+        mc:Ignorable="d"
+        Title="Список продукции" Height="450" Width="800">
+    <Grid>
+        <Grid Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Margin="10" Grid.Row="0">
+                <Menu x:Name="Menu" VerticalAlignment="Center">
+                    <MenuItem Header="Добавить" Click="AddProduction"/>
+                    <MenuItem Header="Изменить" Click="RedactProduction"/>
+                    <MenuItem Header="Удалить" Click="DeleteProduction"/>
+                    <TextBox x:Name="Source_TB" Width="100" HorizontalAlignment="Left" VerticalAlignment="Center" TextChanged="Source_TB_TextChanged"/>
+                </Menu>
+            </Grid>
+            <Grid Margin="10" Grid.Row="1">
+                <DataGrid x:Name="Production_Table" CanUserSortColumns="True" Margin="10, 10, 10, 10" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" IsReadOnly="True" RowBackground="Azure" AlternatingRowBackground="White">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="*" Header="Артикль" Binding="{Binding Path=Article}"/>
+                        <DataGridTextColumn Width="*" Header="Наименование" Binding="{Binding Path=Name}"/>
+                        <DataGridTextColumn Width="*" Header="Описание" Binding="{Binding Path=Description}"/>
+                        <DataGridTextColumn Width="*" Header="Цена" Binding="{Binding Path=CostPrice}"/>
+                        <DataGridTextColumn Width="*" Header="Габариты" Binding="{Binding Path=Dimensions}"/>
+                        <DataGridTextColumn Width="*" Header="Вес(Масса нетто || Масса брутто" Binding="{Binding Path=Weight}"/>
+                    </DataGrid.Columns>
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Добавить" Click="AddProduction"/>
+                            <MenuItem Header="Изменить" Click="RedactProduction"/>
+                            <MenuItem Header="Удалить" Click="DeleteProduction"/>
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
+                </DataGrid>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

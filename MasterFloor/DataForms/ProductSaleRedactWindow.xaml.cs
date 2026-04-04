@@ -98,13 +98,13 @@ namespace MasterFloor.DataForms
 
             if (!int.TryParse(ProductSale_Count_TB.Text, out _))
             {
-                MessageBox.Show("Неправильное количество продукции!");
+                MessageBox.Show("Количество продукции должно быть целым числом или нулем!");
                 return false;
             }
 
             if (ProductSale_Date_DP.SelectedDate == null)
             {
-                MessageBox.Show("Неправильная дата!");
+                MessageBox.Show("Выбрана неверная дата!");
                 return false;
             }
 
@@ -122,14 +122,20 @@ namespace MasterFloor.DataForms
             int count = int.Parse(ProductSale_Count_TB.Text);
 
             double TotalPrice;
-            if (production.CostPrice * partner.GetDiscount(productSales) < production.MinPartnerPrice)
+            double basePrice = production.CostPrice.GetValueOrDefault();
+            double discount = partner.GetDiscount(productSales);
+            double discountedPrice = basePrice * (1 - discount / 100);
+
+            double pricePerUnit = discountedPrice;
+
+            if (pricePerUnit < production.MinPartnerPrice)
                 TotalPrice = count * production.MinPartnerPrice;
             else
-                TotalPrice = count * production.CostPrice.GetValueOrDefault() * partner.GetDiscount(productSales);
-            
-            #pragma warning disable CS8629 // Тип значения, допускающего NULL, может быть NULL.
+                TotalPrice = count * pricePerUnit;
+
+#pragma warning disable CS8629 // Тип значения, допускающего NULL, может быть NULL.
             DateTime selectedDate = (DateTime)ProductSale_Date_DP.SelectedDate;
-            #pragma warning restore CS8629 // Тип значения, допускающего NULL, может быть NULL.
+#pragma warning restore CS8629 // Тип значения, допускающего NULL, может быть NULL.
 
             ProductSale p = new()
             {

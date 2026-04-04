@@ -108,7 +108,7 @@ namespace MasterFloor
             }
             psti = psti_filter;
             ProductSales_Table.Items.Clear();
-            foreach (ProductSalesDto productSalesDto in psti_filter)
+            foreach (ProductSalesDto productSalesDto in psti)
             {
                 ProductSales_Table.Items.Add(productSalesDto);
             }
@@ -265,21 +265,6 @@ namespace MasterFloor
             }
         }
 
-        private void DeleteProductSale(object sender, RoutedEventArgs e)
-        {
-            ProductSale selectedProductSale = productSales.Find(x => x.Id == psti[ProductSales_Table.SelectedIndex].Id);
-            Partner selectedPartner = partners.Find(x => x.Id == selectedProductSale.PartnerId);
-            Production selectedProduction = productions.Find(x => x.Id == selectedProductSale.ProductionId);
-            if (selectedProductSale != null)
-            {
-                if (MessageBox.Show($"Вы действительно хотите удалить заказ {selectedPartner.Name} на {selectedProduction.Name}?", "Удаление", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                {
-                    productSaleService.DeleteProductSale(selectedProductSale.Id);
-                    ReWrite();
-                }
-            }
-        }
-
         private void DeleteProduction(object sender, RoutedEventArgs e)
         {
             ChoiceWindow IndexWindows = new(productions);
@@ -297,6 +282,21 @@ namespace MasterFloor
                             ReWrite();
                         }
                     }
+                }
+            }
+        }
+
+        private void DeleteProductSale(object sender, RoutedEventArgs e)
+        {
+            ProductSale selectedProductSale = productSales.Find(x => x.Id == psti[ProductSales_Table.SelectedIndex].Id);
+            Partner selectedPartner = partners.Find(x => x.Id == selectedProductSale.PartnerId);
+            Production selectedProduction = productions.Find(x => x.Id == selectedProductSale.ProductionId);
+            if (selectedProductSale != null)
+            {
+                if (MessageBox.Show($"Вы действительно хотите удалить заказ {selectedPartner.Name} на {selectedProduction.Name}?", "Удаление", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    productSaleService.DeleteProductSale(selectedProductSale.Id);
+                    ReWrite();
                 }
             }
         }
@@ -691,6 +691,15 @@ namespace MasterFloor
             }
 
             ReWrite();
+        }
+
+        private void ListProduction(object sender, RoutedEventArgs e)
+        {
+            ProductionListWindow Windows = new();
+            if (Windows.ShowDialog() == true)
+            {
+                ReWrite();
+            }
         }
     }
 }

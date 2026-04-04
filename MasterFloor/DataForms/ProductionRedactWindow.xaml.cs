@@ -52,47 +52,68 @@ namespace MasterFloor.DataForms
 
         private bool ValidateInputs()
         {
-            if (!IsArticleValid(Production_Article_TB.Text))
+            bool answer = true;
+            if (!IsArticleValid(Production_Article_TB.Text, out string Article_error))
             {
-                MessageBox.Show("Неверный артикль!");
+                MessageBox.Show(Article_error);
                 return false;
             }
             if (!int.TryParse(Production_Length_TB.Text, out _))
             {
-                MessageBox.Show("Неверное значение длинны!");
+                MessageBox.Show("Длинна должна быть целым числом или нулем!");
                 return false;
             }
             if (!int.TryParse(Production_Width_TB.Text, out _))
             {
-                MessageBox.Show("Неверное значение ширины!");
+                MessageBox.Show("Ширина должна быть целым числом или нулем!");
                 return false;
             }
             if (!int.TryParse(Production_Height_TB.Text, out _))
             {
-                MessageBox.Show("Неверное значение высоты!");
+                MessageBox.Show("Высота должна быть целым числом или нулем!");
                 return false;
             }
             if (!double.TryParse(Production_Net_Weight_TB.Text, out _))
             {
-                MessageBox.Show("Неверное значение массы нетто!");
+                MessageBox.Show("Масса нетто должна быть в формате числа через запятую!");
                 return false;
             }
             if (!double.TryParse(Production_Gross_Weight_TB.Text, out _))
             {
-                MessageBox.Show("Неверное значение массы брутто!");
+                MessageBox.Show("Масса брутто должна быть в формате числа через запятую!");
                 return false;
             }
-            if (!double.TryParse(Production_Min_Partner_Price_TB.Text, out _))
+            if (!double.TryParse(Production_Min_Partner_Price_TB.Text, out double min))
             {
-                MessageBox.Show("Неверное значение мин. цены!");
+                MessageBox.Show("Минимальная цена должна быть в формате числа через запятую!");
                 return false;
             }
-            if (!double.TryParse(Production_Cost_Price_TB.Text, out _))
+            if (!double.TryParse(Production_Cost_Price_TB.Text, out double cost))
             {
-                MessageBox.Show("Неверное значение цены!");
+                MessageBox.Show("Цена должна быть в формате числа через запятую!");
                 return false;
             }
-            return true;
+            if (min > cost)
+            {
+                MessageBox.Show("Цена должна быть не меньше минимальной!");
+                return false;
+            }
+            if (Production_Standard_Number_TB.Text == "")
+            {
+                MessageBox.Show("Введите номер ГОСТа");
+                return false;
+            }
+            if (Production_Quality_Certificate_TB.Text == "")
+            {
+                MessageBox.Show("Введите номер сертификата качества");
+                return false;
+            }
+            if (!Production_Quality_Certificate_TB.Text.All(char.IsDigit))
+            {
+                MessageBox.Show("Сертификат должен состоять только из цифр");
+                return false;
+            }
+            return answer;
         }
         public Production? GetProduction()
         {
@@ -123,27 +144,40 @@ namespace MasterFloor.DataForms
             return null;
         }
 
-        public static bool IsArticleValid(string article)
+        public static bool IsArticleValid(string article, out string error)
         {
-            string trimmed = article.Replace(" ", "");
-
-            if (trimmed.Length < 6)
+            error = "";
+            bool answer = true;
+            if (article.Any(char.IsWhiteSpace))
             {
-                MessageBox.Show("Артикул должен быть не короче 6 символов.");
-                return false;
+                error = "Артикул не должен содержать пробелы";
+                answer = false;
             }
-            if (trimmed.StartsWith("0"))
+            if (article.Length < 6)
             {
-                MessageBox.Show("Артикул не должен начинаться с цифры '0'.");
-                return false;
+                if (error.Length == 0)
+                    error = "Артикул должен быть не короче 6 символов";
+                else
+                    error += " и должен быть не короче 6 символов";
+                answer = false;
             }
-            if (!Regex.IsMatch(trimmed, @"^[A-Z0-9\-]+$"))
+            if (article.StartsWith("0"))
             {
-                MessageBox.Show("Артикул содержит недопустимые символы. Используйте только заглавные буквы, цифры и дефисы.");
-                return false;
+                if (error.Length == 0)
+                    error = "Артикул не должен начинаться с цифры '0'";
+                else
+                    error += " и не должен начинаться с цифры '0'";
+                answer = false;
             }
-
-            return true;
+            if (!Regex.IsMatch(article, @"^[A-Z0-9\-]+$"))
+            {
+                if (error.Length == 0)
+                    error = "Артикул содержит недопустимые символы. Используйте только заглавные английские буквы, цифры и дефисы";
+                else
+                    error += " и содержит недопустимые символы. Используйте только заглавные английские буквы, цифры и дефисы";
+                answer = false;
+            }
+            return answer;
         }
 
         private void accept_btn_Click(object sender, RoutedEventArgs e)

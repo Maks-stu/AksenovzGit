@@ -11,7 +11,7 @@ namespace MasterFloor.DataForms
     public partial class PartnerRedactWindow : Window
     {
         private readonly int Id = 0;
-        readonly List<string> types = [ "ИП", "КФЛ", "ХТ", "ХО", "ООО", "АО/НАО", "ПАО", "ХП", "УП" ];
+        readonly List<string> types = [ "ИП", "КФЛ", "ХТ", "ХО", "ООО", "АО", "НАО", "ПАО", "ХП", "УП" ];
         public PartnerRedactWindow()
         {
             InitializeComponent();
@@ -70,32 +70,38 @@ namespace MasterFloor.DataForms
 
         private bool TryGetRating()
         {
+            bool answer = true;
             if (!int.TryParse(Partner_Rating_TB.Text, out _))
             {
-                MessageBox.Show("Неверное значение рейтинга!");
+                MessageBox.Show("Рейтинг должен быть целым числом или нулем");
                 return false;
             }
-            if (!IsEmailValid(Partner_Phone_TB.Text))
+            if (!IsEmailValid(Partner_Email_TB.Text, out string mail_error))
             {
-                MessageBox.Show("Неправильная Электронная почта!");
+                MessageBox.Show(mail_error);
                 return false;
             }
-            if (!IsPhoneNumberValid(Partner_Phone_TB.Text))
+            if (!IsPhoneNumberValid(Partner_Phone_TB.Text, out string phone_error))
             {
-                MessageBox.Show("Неправильный номер телефона!");
+                MessageBox.Show(phone_error);
                 return false;
             }
-            if (IsValidINN(Partner_Email_TB.Text))
+            if (!IsFIOValid(Partner_Director_Name_TB.Text, out string fio_error))
             {
-                MessageBox.Show("Неправильный ИНН!");
+                MessageBox.Show(fio_error);
                 return false;
             }
-            if (Partner_Type_CB.SelectedIndex != -1)
+            if (!IsValidINN(Partner_INN_TB.Text, out string INN_error))
             {
-                MessageBox.Show("Выберите тип партнера!");
+                MessageBox.Show(INN_error);
                 return false;
             }
-            return true;
+            if (!(Partner_Type_CB.SelectedIndex != -1))
+            {
+                MessageBox.Show("Выберите тип партнера");
+                return false;
+            }
+            return answer;
         }
 
         private void Partner_Logo_Choosing(object sender, RoutedEventArgs e)
@@ -109,74 +115,110 @@ namespace MasterFloor.DataForms
             }
         }
 
-        public static bool IsValidINN(string inn)
+        public static bool IsValidINN(string inn, out string error)
         {
+            error = "";
+            bool answer = true;
             if (string.IsNullOrWhiteSpace(inn))
-                return false;
+            {
+                error = "Введите ИНН";
+                answer = false;
+            }
 
             inn = inn.Trim();
 
-            if (!(inn.Length == 10 || inn.Length == 12))
-                return false;
-
             // Проверка, чтобы ИНН состоял только из цифр
             if (!inn.All(char.IsDigit))
-                return false;
+            {
+                if(error.Length == 0)
+                    error = "ИНН должен содержать только цифры";
+                else
+                    error += " и должен содержать только цифры";
+                answer = false;
+            }
 
-            if (inn.Length == 10)
-                return CheckINN10(inn);
-            else
-                return CheckINN12(inn);
+            if (!(inn.Length == 10 || inn.Length == 12))
+            {
+                if (error.Length == 0)
+                    error = "ИНН должен состоять из 10 или 12 цифр";
+                else
+                    error += " и должен состоять из 10 или 12 цифр";
+                answer = false;
+            }
+
+            if (inn.Length != 10)
+            {
+                if (error.Length == 0)
+                    error = "ИНН не соответствует правилам ИНН юр. лиц";
+                else
+                    error += " и не соответствует правилам ИНН юр. лиц";
+                answer = false;
+                if (inn.Length != 12)
+                {
+                    if (error.Length == 0)
+                        error = "ИНН не соответствует правилам ИНН физ. лиц";
+                    else
+                        error += " и не соответствует правилам ИНН физ. лиц";
+                    answer = false;
+                }
+            }
+            return answer;
         }
 
-        private static bool CheckINN10(string inn)
+        public static bool IsPhoneNumberValid(string phoneNumber, out string error)
         {
-            int[] coefficients = { 2, 4, 10, 3, 5, 9, 4, 6, 8 };
-            int sum = 0;
-
-            for (int i = 0; i < 9; i++)
-                sum += (inn[i] - '0') * coefficients[i];
-
-            int checkDigit = (sum % 11) % 10;
-
-            return checkDigit == (inn[9] - '0');
+            //// Регулярное выражение для проверки номера (например, для России)
+            //string pattern = @"^(\+7|7|8)?\d{10}$";
+            //error = "Номер телефона должен быть в одном из этих форматов: \"+7 10 цифр\", \"7 10 цифр\" или \"8 10 цифр\"";
+            //return Regex.IsMatch(phoneNumber, pattern);
+            error = "Номер телефона должен состоять только из цифр";
+            return phoneNumber.All(char.IsDigit);
+        }
+        public static bool IsFIOValid(string fio, out string error)
+        {
+            error = "";
+            bool answer = true;
+            if (fio.Any(char.IsDigit))
+            {
+                error = "ФИО директора не должно включать в себя цифры";
+                answer = false;
+            }
+            string FIO_Shablon = "Фамилия И.О.";
+            string pattern = @"^[A-ZА-ЯЁ][a-zа-яё]+ [A-ZА-ЯЁ]\.[A-ZА-ЯЁ]\.$";
+            if (!Regex.IsMatch(fio, pattern))
+            {
+                if (error.Length == 0)
+                    error = "ФИО директора должно быть формата " + FIO_Shablon;
+                else
+                    error += " и должно быть формата " + FIO_Shablon;
+                answer = false;
+            }
+            return answer;
         }
 
-        private static bool CheckINN12(string inn)
+        public static bool IsEmailValid(string email, out string error)
         {
-            int[] coefficients1 = { 7, 2, 4, 10, 3, 5, 9, 4, 6, 8 };
-            int[] coefficients2 = { 3, 7, 2, 4, 10, 3, 5, 9, 4, 6, 8 };
-
-            int sum1 = 0;
-            for (int i = 0; i < 10; i++)
-                sum1 += (inn[i] - '0') * coefficients1[i];
-
-            int checkDigit1 = (sum1 % 11) % 10;
-
-            int sum2 = 0;
-            for (int i = 0; i < 11; i++)
-                sum2 += (inn[i] - '0') * coefficients2[i];
-
-            int checkDigit2 = (sum2 % 11) % 10;
-
-            return checkDigit1 == (inn[10] - '0') && checkDigit2 == (inn[11] - '0');
-        }
-
-        public static bool IsPhoneNumberValid(string phoneNumber)
-        {
-            // Регулярное выражение для проверки номера (например, для России)
-            string pattern = @"^(\+7|7|8)?\d{10}$";
-            return Regex.IsMatch(phoneNumber, pattern);
-        }
-
-        public static bool IsEmailValid(string email)
-        {
+            error = "";
+            bool answer = true;
+            //Записан ли email в нужную строку
             if (string.IsNullOrWhiteSpace(email))
-                return false;
+            {
+                error = "Введите Электронную почту";
+                answer = false;
+            }
 
-            // Простое регулярное выражение для проверки формата email
+            string E_mail_Shablon = " имя@домен.расширение";
+            // Простое регулярное выражение для проверки формата email в виде имя@домен.расширение
             string pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
-            return Regex.IsMatch(email, pattern);
+            if(!Regex.IsMatch(email, pattern))
+            {
+                if (error.Length == 0)
+                    error = "Электронная почта должна быть формата " + E_mail_Shablon;
+                else
+                    error += " и должна быть формата " + E_mail_Shablon;
+                answer = false;
+            }
+            return answer;
         }
 
         private void accept_btn_Click(object sender, RoutedEventArgs e)
