@@ -145,23 +145,6 @@ namespace MasterFloor.DataForms
                     error += " и должен состоять из 10 или 12 цифр";
                 answer = false;
             }
-
-            if (inn.Length != 10)
-            {
-                if (error.Length == 0)
-                    error = "ИНН не соответствует правилам ИНН юр. лиц";
-                else
-                    error += " и не соответствует правилам ИНН юр. лиц";
-                answer = false;
-                if (inn.Length != 12)
-                {
-                    if (error.Length == 0)
-                        error = "ИНН не соответствует правилам ИНН физ. лиц";
-                    else
-                        error += " и не соответствует правилам ИНН физ. лиц";
-                    answer = false;
-                }
-            }
             return answer;
         }
 
